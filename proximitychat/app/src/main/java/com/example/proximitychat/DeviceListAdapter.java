@@ -15,20 +15,20 @@ import java.util.ArrayList;
 public class DeviceListAdapter extends ArrayAdapter<BluetoothDevice> {
 
     private LayoutInflater mLayoutInflater;
-    private ArrayList<BluetoothDevice> mDevices;
-    private int  mViewResourceId;
+    private ArrayList<BluetoothDevice> dispositivi;
+    private int idRisorsa;
 
     public DeviceListAdapter(Context context, int tvResourceId, ArrayList<BluetoothDevice> devices){
         super(context, tvResourceId,devices);
-        this.mDevices = devices;
+        this.dispositivi = devices;
         mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mViewResourceId = tvResourceId;
+        idRisorsa = tvResourceId;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        convertView = mLayoutInflater.inflate(mViewResourceId, null);
+        convertView = mLayoutInflater.inflate(idRisorsa, null);
 
-        BluetoothDevice device = mDevices.get(position);
+        BluetoothDevice device = dispositivi.get(position);
 
         if (device != null) {
             TextView deviceName = (TextView) convertView.findViewById(R.id.tvDeviceName);
