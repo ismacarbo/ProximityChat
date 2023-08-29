@@ -74,7 +74,38 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    public void cerca(View view) {
+        Log.d(TAG, "controllo di dispositivi non associati");
 
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_DENIED)
+        {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+            {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.BLUETOOTH_SCAN}, 2);
+                return;
+            }
+        }
+
+        if(BluetoothAdapter.isDiscovering()){
+            BluetoothAdapter.cancelDiscovery();
+            Log.d(TAG, "btnDiscover: cancellato");
+
+
+            controllaPermessi();
+
+            BluetoothAdapter.startDiscovery();
+            IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+            registerReceiver(mBroadcastReceiver3, discoverDevicesIntent);
+        }
+        if(!BluetoothAdapter.isDiscovering()){
+
+            controllaPermessi();
+
+            BluetoothAdapter.startDiscovery();
+            IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+            registerReceiver(mBroadcastReceiver3, discoverDevicesIntent);
+        }
+    }
 
     /**
      * controlla i permessi nel manifest.xml per il bluetooth API+23
