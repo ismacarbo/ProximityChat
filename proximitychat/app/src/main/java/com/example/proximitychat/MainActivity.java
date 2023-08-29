@@ -74,5 +74,28 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-   
+
+
+    /**
+     * controlla i permessi nel manifest.xml per il bluetooth API+23
+     */
+    private void controllaPermessi() {
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP){
+            int permissionCheck = 0;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                permissionCheck = this.checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION");
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                permissionCheck += this.checkSelfPermission("Manifest.permission.ACCESS_COARSE_LOCATION");
+            }
+            if (permissionCheck != 0) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001); //Any number
+                }
+            }
+        }else{
+            Log.d(TAG, "checkBTPermissions: No need to check permissions. SDK version < LOLLIPOP.");
+        }
+    }
 }
