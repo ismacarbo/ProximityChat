@@ -57,7 +57,6 @@ public class Comunicazioni {
         }
 
         public void run() {
-            Log.d(TAG, "run: AcceptThread Running.");
 
             BluetoothSocket socket = null;
 
