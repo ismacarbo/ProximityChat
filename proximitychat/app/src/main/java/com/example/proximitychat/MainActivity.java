@@ -25,10 +25,10 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    BluetoothAdapter BluetoothAdapter;
+    private BluetoothAdapter BluetoothAdapter;
     public Set<BluetoothDevice> dispositiviTrovati = new HashSet<>();
     public DeviceListAdapter DeviceListAdapter;
-    ListView dispositivi;
+    private ListView dispositivi;
 
 
     @Override
