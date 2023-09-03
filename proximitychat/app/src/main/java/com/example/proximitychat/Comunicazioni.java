@@ -110,7 +110,7 @@ public class Comunicazioni {
 
                 temp = dispositivo.createRfcommSocketToServiceRecord(uuidDispositivo);
             } catch (IOException e) {
-                Log.e(TAG, "ConnectThread: Could not create InsecureRfcommSocket " + e.getMessage());
+                Log.e(TAG, "connessione fallita" + e.getMessage());
             }
 
             socket = temp;
