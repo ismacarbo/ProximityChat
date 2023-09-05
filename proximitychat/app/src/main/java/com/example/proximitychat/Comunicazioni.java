@@ -24,6 +24,7 @@ public class Comunicazioni {
     private final BluetoothAdapter bluetoothAdapter;
     private Context context;
 
+    private AccettaThread thread1;
     private AccettaThread accettaThread;
     private ConnettiThread connettiThread;
     private UUID uuidDispositivo;
@@ -146,6 +147,40 @@ public class Comunicazioni {
             }
         }
     }
+
+    /**
+     * avvia la chat (crea l'oggetto)
+     */
+    public synchronized void start() {
+        Log.d(TAG, "inizio");
+
+
+        if (connettiThread != null) {
+            connettiThread.cancel();
+            connettiThread = null;
+        }
+        if (thread1 == null) {
+            thread1 = new AccettaThread();
+            thread1.start();
+        }
+    }
+
+    /**
+
+     si mette in ascolto
+     il thread connessione prova a fare una connessione con l'oggetto AcettaThread sull'altro dispositivo
+     **/
+
+    public void startClient(BluetoothDevice dispositivo1,UUID uuid){
+
+
+        dialog = ProgressDialog.show(context,"Connessione bluetooth..."
+                ,"Attendere prego",true);
+
+        connettiThread = new ConnettiThread(dispositivo1, uuid);
+        connettiThread.start();
+    }
+
 
 }
 
