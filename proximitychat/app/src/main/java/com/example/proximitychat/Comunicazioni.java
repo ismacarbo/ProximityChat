@@ -12,6 +12,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.UUID;
 
 
@@ -25,7 +26,7 @@ public class Comunicazioni {
             UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
 
     private final BluetoothAdapter bluetoothAdapter;
-    private Context context;
+    private final Context context;
 
     private AccettaThread thread1;
     private ConnettiThread connettiThread;
@@ -86,14 +87,14 @@ public class Comunicazioni {
             try {
                 serverSocket.close();
             } catch (IOException e) {
-                Log.e(TAG, "serverSocket: " + e.getMessage() );
+                Log.e(TAG, "serverSocket: " + e.getMessage());
             }
         }
 
 
     }
 
-    private class ConnettiThread extends Thread{
+    private class ConnettiThread extends Thread {
 
         private BluetoothSocket socket;
 
@@ -107,7 +108,7 @@ public class Comunicazioni {
         /**
          * Crea la connesione con il dispositivo selezionato
          */
-        public void run(){
+        public void run() {
             BluetoothSocket temp = null;
 
             try {
@@ -141,6 +142,7 @@ public class Comunicazioni {
 
             //connetti(socket,mmDevice);
         }
+
         public void cancel() {
             try {
                 Log.d(TAG, "chiusura connessione client");
@@ -169,24 +171,22 @@ public class Comunicazioni {
     }
 
     /**
-
-     si mette in ascolto
-     il thread connessione prova a fare una connessione con l'oggetto AcettaThread sull'altro dispositivo
+     * si mette in ascolto
+     * il thread connessione prova a fare una connessione con l'oggetto AcettaThread sull'altro dispositivo
      **/
 
-    public void startClient(BluetoothDevice dispositivo1,UUID uuid){
+    public void startClient(BluetoothDevice dispositivo1, UUID uuid) {
 
 
-        dialog = ProgressDialog.show(context,"Connessione bluetooth..."
-                ,"Attendere prego",true);
+        dialog = ProgressDialog.show(context, "Connessione bluetooth..."
+                , "Attendere prego", true);
 
         connettiThread = new ConnettiThread(dispositivo1, uuid);
         connettiThread.start();
     }
 
     /**
-    classe per la connessione
-
+     * classe per la connessione
      **/
     private class ThreadConnesso extends Thread {
 
@@ -195,13 +195,13 @@ public class Comunicazioni {
         private final OutputStream outputStream;
 
 
-        public ThreadConnesso(BluetoothSocket socket){
-            this.socket=socket;
-            InputStream tempInput=null;
-            OutputStream tempoOutput=null;
+        public ThreadConnesso(BluetoothSocket socket) {
+            this.socket = socket;
+            InputStream tempInput = null;
+            OutputStream tempoOutput = null;
             try {
-                tempInput=socket.getInputStream();
-                tempoOutput=socket.getOutputStream();
+                tempInput = socket.getInputStream();
+                tempoOutput = socket.getOutputStream();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -211,12 +211,12 @@ public class Comunicazioni {
             dialog.dismiss();
 
 
-            inputStream=tempInput;
-            outputStream=tempoOutput;
+            inputStream = tempInput;
+            outputStream = tempoOutput;
         }
 
 
-        public void run(){
+        public void run() {
             byte[] buffer = new byte[1024];
 
             int bytes; //in ritorno dal thread
@@ -227,19 +227,31 @@ public class Comunicazioni {
                     String messaggio = new String(buffer, 0, bytes);
                     Log.d(TAG, "IN ARRIVO: " + messaggio);
                 } catch (IOException e) {
-                    Log.e(TAG, "Eccezione: " + e.getMessage() );
+                    Log.e(TAG, "Eccezione: " + e.getMessage());
                     break;
                 }
             }
         }
 
 
+        //chiama dal main per scrivere
+        public void write(byte[] bytes) {
+            String messaggio = new String(bytes, Charset.defaultCharset());
+            Log.d(TAG, "IN USCITA: " + messaggio);
+            try {
+                outputStream.write(bytes);
+            } catch (IOException e) {
+                Log.e(TAG, "Eccezione: " + e.getMessage());
+            }
+        }
 
-
-
-
+        //chiama dal main per chiudere
+        public void cancel() {
+            try {
+                socket.close();
+            } catch (IOException e) {
+            }
+        }
     }
 
-
 }
-
