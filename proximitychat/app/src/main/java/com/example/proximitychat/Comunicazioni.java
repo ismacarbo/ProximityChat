@@ -1,5 +1,6 @@
 package com.example.proximitychat;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -9,6 +10,8 @@ import android.content.Context;
 import android.util.Log;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.UUID;
 
 
@@ -25,11 +28,11 @@ public class Comunicazioni {
     private Context context;
 
     private AccettaThread thread1;
-    private AccettaThread accettaThread;
     private ConnettiThread connettiThread;
     private UUID uuidDispositivo;
     private ProgressDialog dialog;
     private BluetoothDevice dispositivo;
+    private ThreadConnesso threadConnesso;
 
 
     public Comunicazioni(Context context) {
@@ -179,6 +182,62 @@ public class Comunicazioni {
 
         connettiThread = new ConnettiThread(dispositivo1, uuid);
         connettiThread.start();
+    }
+
+    /**
+    classe per la connessione
+
+     **/
+    private class ThreadConnesso extends Thread {
+
+        private final BluetoothSocket socket;
+        private final InputStream inputStream;
+        private final OutputStream outputStream;
+
+
+        public ThreadConnesso(BluetoothSocket socket){
+            this.socket=socket;
+            InputStream tempInput=null;
+            OutputStream tempoOutput=null;
+            try {
+                tempInput=socket.getInputStream();
+                tempoOutput=socket.getOutputStream();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            //tolgo il dialog ormai la connessione c'è
+            dialog.dismiss();
+
+
+            inputStream=tempInput;
+            outputStream=tempoOutput;
+        }
+
+
+        public void run(){
+            byte[] buffer = new byte[1024];
+
+            int bytes; //in ritorno dal thread
+
+            while (true) {
+                try {
+                    bytes = inputStream.read(buffer);
+                    String messaggio = new String(buffer, 0, bytes);
+                    Log.d(TAG, "IN ARRIVO: " + messaggio);
+                } catch (IOException e) {
+                    Log.e(TAG, "Eccezione: " + e.getMessage() );
+                    break;
+                }
+            }
+        }
+
+
+
+
+
+
     }
 
 
