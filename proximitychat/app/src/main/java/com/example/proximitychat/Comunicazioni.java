@@ -76,10 +76,9 @@ public class Comunicazioni {
 
 
             if (socket != null) {
-                //connetti(socket, dispositivo);
+                connetti(socket, dispositivo);
             }
-
-            Log.i(TAG, "END mAcceptThread ");
+            
         }
 
         public void cancel() {
@@ -140,7 +139,7 @@ public class Comunicazioni {
                 Log.d(TAG, "Eccezione uuid: " + UUID_mio);
             }
 
-            //connetti(socket,mmDevice);
+            connetti(socket,dispositivo);
         }
 
         public void cancel() {
@@ -252,6 +251,22 @@ public class Comunicazioni {
             } catch (IOException e) {
             }
         }
+    }
+
+
+    private void connetti(BluetoothSocket socket, BluetoothDevice mmDevice) {
+
+        //inizio del thread
+        threadConnesso = new ThreadConnesso(socket);
+        threadConnesso.start();
+    }
+
+    /**
+     * scrive in background quando arriva un messaggio
+     */
+    public void write(byte[] out) {
+        ThreadConnesso tmp;
+        threadConnesso.write(out);
     }
 
 }

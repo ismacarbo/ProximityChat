@@ -12,13 +12,13 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 
-public class DeviceListAdapter extends ArrayAdapter<BluetoothDevice> {
+public class listaDispositivi extends ArrayAdapter<BluetoothDevice> {
 
     private LayoutInflater mLayoutInflater;
     private ArrayList<BluetoothDevice> dispositivi;
     private int idRisorsa;
 
-    public DeviceListAdapter(Context context, int tvResourceId, ArrayList<BluetoothDevice> devices){
+    public listaDispositivi(Context context, int tvResourceId, ArrayList<BluetoothDevice> devices){
         super(context, tvResourceId,devices);
         this.dispositivi = devices;
         mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

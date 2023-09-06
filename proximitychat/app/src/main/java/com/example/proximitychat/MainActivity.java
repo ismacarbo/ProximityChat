@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private BluetoothAdapter BluetoothAdapter;
     public Set<BluetoothDevice> dispositiviTrovati = new HashSet<>();
-    public DeviceListAdapter DeviceListAdapter;
+    public listaDispositivi DeviceListAdapter;
     private ListView dispositivi;
 
 
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "Trovati: " + device.getName() + ": " + device.getAddress());
                 ArrayList<BluetoothDevice> trovati=new ArrayList<>();
                 trovati.addAll(dispositiviTrovati);
-                DeviceListAdapter = new DeviceListAdapter(context, R.layout.device_adapter_view, trovati);
+                DeviceListAdapter = new listaDispositivi(context, R.layout.device_adapter_view, trovati);
                 dispositivi.setAdapter(DeviceListAdapter);
             }
         }
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }else{
-            Log.d(TAG, "checkBTPermissions: No need to check permissions. SDK version < LOLLIPOP.");
+            Log.d(TAG, "non serve controllare. SDK version < LOLLIPOP.");
         }
     }
 }
