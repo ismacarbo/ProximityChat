@@ -39,6 +39,7 @@ public class Comunicazioni {
     public Comunicazioni(Context context) {
         this.context = context;
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        start();
     }
 
 
@@ -78,7 +79,7 @@ public class Comunicazioni {
             if (socket != null) {
                 connetti(socket, dispositivo);
             }
-            
+
         }
 
         public void cancel() {

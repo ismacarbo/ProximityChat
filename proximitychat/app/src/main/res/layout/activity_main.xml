@@ -27,6 +27,30 @@
 
     </ListView>
 
+    <Button
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/nuoviDisp"
+        android:id="@+id/iniziaConnessione"
+        android:text="inizia connessione"/>
+
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="Enter Text Here"
+        android:layout_below="@+id/iniziaConnessione"
+        android:layout_alignParentStart="true"
+        android:id="@+id/editText"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SEND"
+        android:id="@+id/invia"
+        android:layout_toRightOf="@+id/editText"
+        android:layout_below="@+id/iniziaConnessione"/>
+
 
 </RelativeLayout>
 

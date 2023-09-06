@@ -13,6 +13,8 @@ import android.os.Bundle;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,14 +24,21 @@ import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    private BluetoothAdapter BluetoothAdapter;
+    private BluetoothAdapter bluetoothAdapter;
     public Set<BluetoothDevice> dispositiviTrovati = new HashSet<>();
     public listaDispositivi DeviceListAdapter;
     private ListView dispositivi;
-
+    private Comunicazioni comunicazioni;
+    private Button iniziaConnessione;
+    private Button invia;
+    private EditText editText;
+    private BluetoothDevice dispositivo;
+    private static final UUID MY_UUID_INSECURE =
+            UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +46,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         dispositivi = (ListView) findViewById(R.id.nuoviDisp);
         dispositiviTrovati = new HashSet<>();
-        BluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        bluetoothAdapter = bluetoothAdapter.getDefaultAdapter();
+        editText=findViewById(R.id.editText);
+        invia=findViewById(R.id.invia);
+        iniziaConnessione=findViewById(R.id.iniziaConnessione);
+
+        invia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                iniziaConnessione();
+            }
+        });
     }
 
     private BroadcastReceiver mBroadcastReceiver3 = new BroadcastReceiver() {
@@ -86,26 +105,36 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        if(BluetoothAdapter.isDiscovering()){
-            BluetoothAdapter.cancelDiscovery();
+        if(bluetoothAdapter.isDiscovering()){
+            bluetoothAdapter.cancelDiscovery();
             Log.d(TAG, "btnDiscover: cancellato");
 
 
             controllaPermessi();
 
-            BluetoothAdapter.startDiscovery();
+            bluetoothAdapter.startDiscovery();
             IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
             registerReceiver(mBroadcastReceiver3, discoverDevicesIntent);
         }
-        if(!BluetoothAdapter.isDiscovering()){
+        if(!bluetoothAdapter.isDiscovering()){
 
             controllaPermessi();
 
-            BluetoothAdapter.startDiscovery();
+            bluetoothAdapter.startDiscovery();
             IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
             registerReceiver(mBroadcastReceiver3, discoverDevicesIntent);
         }
     }
+
+
+    public void iniziaConnessione(){
+        iniziaConessioneBT(dispositivo,MY_UUID_INSECURE);
+    }
+
+    public void iniziaConessioneBT(BluetoothDevice dispositivo, UUID uuid){
+        comunicazioni.startClient(dispositivo,uuid);
+    }
+
 
     /**
      * controlla i permessi nel manifest.xml per il bluetooth API+23
